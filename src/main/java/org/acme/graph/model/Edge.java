@@ -1,11 +1,20 @@
 package org.acme.graph.model;
 
+import com.bedatadriven.jackson.datatype.jts.serialization.GeometrySerializer;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateSequence;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequence;
+
 /**
- * 
  * Un arc matérialisé par un sommet source et un sommet cible
- * 
- * @author MBorne
  *
+ * @author MBorne
  */
 public class Edge {
 	/**
@@ -39,17 +48,34 @@ public class Edge {
 		this.id = id;
 	}
 
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "id"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
 	public Vertex getSource() {
 		return source;
 	}
 
+	@JsonIdentityInfo(
+			generator = ObjectIdGenerators.PropertyGenerator.class,
+			property = "id"
+	)
+	@JsonIdentityReference(alwaysAsId = true)
 	public Vertex getTarget() {
 		return target;
 	}
 
+	@JsonSerialize(using = GeometrySerializer.class)
+	public LineString getGeometry() {
+		Coordinate[] coordinates = {this.source.getCoordinate(), this.target.getCoordinate()};
+		CoordinateSequence cs = new CoordinateArraySequence(coordinates);
+		return new LineString(cs, new GeometryFactory());
+	}
+
 	/**
 	 * dijkstra - coût de parcours de l'arc (distance géométrique)
-	 * 
+	 *
 	 * @return
 	 */
 	public double getCost() {
