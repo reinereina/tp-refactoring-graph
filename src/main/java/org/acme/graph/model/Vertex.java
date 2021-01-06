@@ -3,12 +3,14 @@ package org.acme.graph.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vividsolutions.jts.geom.Coordinate;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
- * 
  * Un sommet dans un graphe
- * 
- * @author MBorne
  *
+ * @author MBorne
  */
 public class Vertex {
 
@@ -35,8 +37,15 @@ public class Vertex {
 	 */
 	private boolean visited;
 
-	public Vertex() {
+	@JsonIgnore
+	private List<Edge> inEdges;
 
+	@JsonIgnore
+	private List<Edge> outEdges;
+
+	public Vertex() {
+		this.inEdges = new ArrayList<>();
+		this.outEdges = new ArrayList<>();
 	}
 
 	public String getId() {
@@ -85,4 +94,12 @@ public class Vertex {
 		return id;
 	}
 
+
+	public Collection<Edge> getInEdges() {
+		return inEdges;
+	}
+
+	public Collection<Edge> getOutEdges() {
+		return outEdges;
+	}
 }
