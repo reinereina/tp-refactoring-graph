@@ -1,9 +1,9 @@
 package org.acme.graph.io;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
 import org.acme.graph.model.Edge;
 import org.acme.graph.model.Graph;
 import org.acme.graph.model.Vertex;
@@ -16,10 +16,9 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.Filter;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Lecture d'un fichier d'arc correspondant au modèle ROUTE500 de l'IGN
@@ -61,11 +60,13 @@ public class ShpGraphReader {
 
 				/* Création de l'arc pour le parcours en sens direct */
 				Edge directEdge = new Edge(source, target);
+				directEdge.setGeometry(geometry);
 				directEdge.setId(id + "-direct");
 				graph.getEdges().add(directEdge);
 
 				/* Création de l'arc pour le parcours en sens opposé */
 				Edge reverseEdge = new Edge(target, source);
+				reverseEdge.setGeometry(geometry);
 				reverseEdge.setId(id + "-reverse");
 				graph.getEdges().add(reverseEdge);
 			}
