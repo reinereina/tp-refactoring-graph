@@ -71,6 +71,7 @@ public class Edge {
 	}
 
 	@JsonSerialize(using = GeometrySerializer.class)
+
 	public LineString getGeometry() {
 		return this.geometry;
 	}
